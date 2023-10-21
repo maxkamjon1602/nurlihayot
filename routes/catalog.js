@@ -1,0 +1,64 @@
+const express = require("express");
+const router = express.Router();
+
+// Require controller modules.
+const post_controller = require("../controllers/postController");
+const user_controller = require("../controllers/userController");
+const list_controller = require("../controllers/listController");
+const address_controller = require("../controllers/addressController");
+
+/// POST ROUTES ///
+
+// GET catalog home page.
+router.get("/", post_controller.index);
+
+// GET request for creating a new post. Note, this must come before routes that display post (uses id).
+router.get("/post/create", post_controller.post_create_get);
+
+// POST request for creating posts.
+router.post("/post/create", post_controller.post_create_post);
+
+// GET request to delete post.
+router.get("/post/:id/delete", post_controller.post_delete_get);
+
+// POST request to delete post.
+router.post("/post/:id/delete", post_controller.post_delete_post);
+
+// GET request to update post.
+router.get("/post/:id/update", post_controller.post_update_get);
+
+// POST request to update post.
+router.post("/post/:id/update", post_controller.post_update_post);
+
+// GET request for one post.
+router.get("/post/:id", post_controller.post_detail);
+
+// GET request for list of all posts.
+router.get("/posts", post_controller.post_list);
+
+
+/// USER ROUTES ///
+
+// GET request for creating user. NOTE This must come before route for id (i.e. display user).
+router.get("/user/create", user_controller.user_create_get);
+
+// POST request for creating user.
+router.post("/user/create", user_controller.user_create_post);
+
+// GET request to delete user.
+router.get("/user/:id/delete", user_controller.user_delete_get);
+
+// POST request to delete user.
+router.post("/user/:id/delete", user_controller.user_delete_post);
+
+// GET request to update user.
+router.get("/user/:id/update", user_controller.user_update_get);
+
+// POST request to update user.
+router.post("/user/:id/update", user_controller.user_update_post);
+
+// GET request for one user.
+router.get("/user/:id", user_controller.user_detail);
+
+// GET request for list of all users.
+router.get("/users", user_controller.user_list);

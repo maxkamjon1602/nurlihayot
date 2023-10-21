@@ -2,4 +2,15 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  p Welcome to #[em Nurlihayot], a very basic islamic news website developed as a personal blog in Node.js.
+
+  h1 Dynamic content
+
+  p The nurlihayot has the following record counts:
+
+  //- ul
+  //-   li #[strong Posts:] !{post_count}
+  //-   li #[strong Users:] !{user_count}
+  //-   li #[strong Addresses:] !{address_count}
+  //-   li #[strong Files:] !{file_count}
+  //-   li #[strong Lists:] !{list_count}
