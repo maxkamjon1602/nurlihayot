@@ -5,6 +5,8 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   firstName: { type: String, required: true, maxLength: 100 },
   lastName: { type: String, required: true, maxLength: 100 },
+  created: { type: Date, required: true },
+  updated: { type: Date },
   dob: { type: Date },
   bio: { type: String, maxLength: 350 },
   telephone: { type: String, maxLength: 15 },

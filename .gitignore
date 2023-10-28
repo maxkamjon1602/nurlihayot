@@ -41,6 +41,9 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
+/uploads
+/uploads/
+uploads/
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
@@ -128,3 +131,15 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+costa-rica_1080.mp4
+IMG_1.JPG
+IMG_2.JPG
+IMG_3.JPG
+IMG_4.JPG
+IMG_5.JPG
+IMG_6.JPG
+IMG_7.JPG
+IMG_8.JPG
+IMG_9.JPG
+IMG_10.JPG

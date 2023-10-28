@@ -1,0 +1,28 @@
+extends layout
+
+block content
+    h1= title
+
+    form(method='POST' action='' enctype='multipart/form-data')
+        div.form-group
+            label(for='title') Title:
+            input#title.form-control(type='text', placeholder='Name a post' name='title' value=(undefined===post ? '' : post.title) )
+        div.form-group
+            label(for='description') Description:
+            input#description.form-control(type='text', placeholder='Write brief description' name='description' value=(undefined===post ? '' : post.description) )
+        div.form-group
+            label(for='media') Select photos:
+            input#media.form-control(type='file' name='media' multiple='true' required='true' value=(undefined===post ? '' : media._id) )
+        div.form-group
+            label Save in:
+            div
+                for list in lists
+                    div(style='display: block; padding-top: 5px;')
+                        input.checkbox-input(type='checkbox', name='list', id=list._id, value=list._id, checked=list.checked )
+                        label(for=list._id) #{list.name}
+        button.btn.btn-primary(type='submit') submit
+
+        if errors
+            ul
+                for error in errors
+                    li!= error.msg

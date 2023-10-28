@@ -1,0 +1,21 @@
+extends layout
+
+block content
+    h1= title
+
+    ul
+        each media in mediaList
+            li
+                img(src=`/${media.file}`)
+                a(href=media.url) #{media.post.title} : #{media.post.user} - 
+                if media.fileType=='JPG'
+                    span.text-success #{media.fileName}
+                else if media.fileType=='MP4'
+                    span.text-danger #{media.fileName}
+                else
+                    span.text-warning #{media.fileName}
+                if !media.fileType
+                    span (File type unknown! #{media.fileType} )
+
+        else
+            li There is no media in this website

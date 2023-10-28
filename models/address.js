@@ -8,6 +8,8 @@ const AddressSchema = new Schema({
     city: { type: String },
     country: { type: String},
     postcode: { type: String, maxLength: 10 },
+    created: { type: Date },
+    updated: { type: Date },
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
 });
 

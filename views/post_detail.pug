@@ -1,0 +1,9 @@
+extends layout
+
+block content
+    h1 Title: #{post.title}
+
+    img(src=`${post.media._id}`)
+    p #[strong #{post.title}]
+    p #{post.description}
+    
