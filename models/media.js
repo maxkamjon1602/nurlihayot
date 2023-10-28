@@ -6,7 +6,7 @@ const MediaSchema = new Schema({
     post: { type: Schema.Types.ObjectId, ref: "Post", required: true },
     fileName: { type: String },
     fileType: { type: String },
-    file: { type: Buffer },
+    file: { data: Buffer, contentType: String },
     size: { type: Number },
     src: { type: String },
     created: { type: Date, required: true },

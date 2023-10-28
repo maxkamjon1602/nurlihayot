@@ -95,7 +95,7 @@ async function postCreate(index, user, title, description, created, updated, lis
     console.log(`Added post: ${user.lastName} - ${created}, ${title}`);
 }
 
-async function mediaCreate(index, post, fileName, fileType, file, size, src, created, updated) {
+async function mediaCreate(index, post, fileName, fileType, fileData, fileContentType, size, src, created, updated) {
     const mediadetail = {
         post: post,
         fileName: fileName,
@@ -106,8 +106,11 @@ async function mediaCreate(index, post, fileName, fileType, file, size, src, cre
     };
     if (src != false) mediadetail.src = src;
     if (updated != updated) mediadetail.updated = updated;
+    
 
     const media = new Media(mediadetail);
+    media.file.data = fs.readFileSync(fileData);
+    media.file.contentType = fileContentType;
     await media.save();
     medias[index] = media;
     console.log(`Added media: ${fileName}.${fileType}, ${size}`);
@@ -346,7 +349,8 @@ async function createMedias() {
             posts[0],
             "Iceberg",
             "jpg",
-            "/uploads/IMG_1.JPG",
+            "../uploads/IMG_1.JPG",
+            'image/png',
             5488395,
             "",
             "2018-01-04",
@@ -356,7 +360,8 @@ async function createMedias() {
             posts[1],
             "Flowers",
             "jpg",
-            "/uploads/IMG_2.JPG",
+            "../uploads/IMG_2.JPG",
+            'image/png',
             4520899,
             "",
             "2018-05-12",
@@ -366,7 +371,8 @@ async function createMedias() {
             posts[2],
             "Dream-path",
             "jpg",
-            "/uploads/IMG_6.JPG",
+            "../uploads/IMG_6.JPG", 
+            "image/png",
             14022292,
             "",
             "2017-07-22",
