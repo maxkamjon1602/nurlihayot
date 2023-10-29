@@ -1,9 +1,11 @@
 const Address = require("../models/address");
+const User = require("../models/user");
 const asyncHandler = require("express-async-handler");
 
 // Display list of all addresss.
 exports.address_list = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: address list");
+  const addresses = await Address.find().sort({ city: 1 }).populate("user").exec();
+  res.render("address_list", { title: "Address List", addressList: addresses });
 });
 
 // Display detail page for a specific address.

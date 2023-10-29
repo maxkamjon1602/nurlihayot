@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    h1= title
+
+    ul
+    each user in userList
+        li
+            a(href=user.url) #{user.name}
+            |  (#{user.dob_yyyy_mm_dd})
+
+    else
+        li There are no users.

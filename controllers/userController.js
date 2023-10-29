@@ -1,9 +1,14 @@
 const User = require("../models/user");
+const { DateTime } = require("luxon");
 const asyncHandler = require("express-async-handler");
 
 // Display list of all users.
 exports.user_list = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: user list");
+  const allUsers = await User.find().sort({ lastName: 1 }).exec();
+  res.render("user_list", {
+    title: "User List",
+    userList: allUsers,
+  })
 });
 
 // Display detail page for a specific user.

@@ -1,0 +1,17 @@
+extends layout
+
+block content
+    h1= title
+
+    ul
+    each address in addressList
+        li
+            a(href=address.url) #{address.city}
+            | , #{address.lineOne}
+            if !(address.lineTwo==='') || !(address.lineTwo===undefined)
+                | , #{address.lineTwo}
+            | , #{address.postcode}
+            |  - (#{address.created_formatted})
+
+    else
+        li  There is no address.

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { DateTime } = require("luxon");
 
 const Schema = mongoose.Schema;
 
@@ -16,6 +17,14 @@ const AddressSchema = new Schema({
 AddressSchema.virtual("url").get(function() {
     // We don't use array function as we will need the this object
     return `/catalog/address/${this._id}`;
+});
+
+AddressSchema.virtual("created_formatted").get(function() {
+    return DateTime.fromJSDate(this.created).toLocaleString(DateTime.DATETIME_SHORT);
+});
+
+AddressSchema.virtual("updated_formatted").get(function() {
+    return DateTime.fromJSDate(this.updated).toLocaleString(DateTime.DATE_SHORT);
 });
 
 module.exports = mongoose.model("Address", AddressSchema);

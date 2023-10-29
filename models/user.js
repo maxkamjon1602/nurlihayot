@@ -1,3 +1,4 @@
+const { DateTime } = require("luxon");
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
@@ -23,6 +24,19 @@ UserSchema.virtual("name").get(function () {
     fullname = `${this.lastName}, ${this.firstName}`;
   }
   return fullname;
+});
+
+// Virtual for user's formatted dob
+UserSchema.virtual("dob_yyyy_mm_dd").get(function () {
+  return DateTime.fromJSDate(this.dob).toISODate(); // format 'YYYY-MM-DD'
+});
+
+UserSchema.virtual("created_formatted").get(function() {
+  return DateTime.fromJSDate(this.created).toLocaleString(DateTime.DATETIME_SHORT);
+});
+
+UserSchema.virtual("updated_formatted").get(function() {
+  return DateTime.fromJSDate(this.updated).toLocaleString(DateTime.DATE_SHORT);
 });
 
 // Virtual for user's URL

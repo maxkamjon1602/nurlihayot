@@ -1,9 +1,14 @@
 const List = require("../models/list");
+const User = require("../models/user");
 const asyncHandler = require("express-async-handler");
 
 // Display list of all lists.
 exports.list_list = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: list list");
+  const lists = await List.find().sort({ name: 1 }).populate("user").exec();
+  res.render("list_list", {
+    title: "Lists",
+    lists: lists,
+  });
 });
 
 // Display detail page for a specific list.
