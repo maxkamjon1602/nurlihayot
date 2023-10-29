@@ -5,11 +5,8 @@ const asyncHandler = require("express-async-handler");
 // Display list of all medias.
 exports.media_list = asyncHandler(async (req, res, next) => {
   const allMedias = await Media.find().populate("post").exec();
-
-  // for (const media of allMedias) {
-  //   res.contentType(media.fileType);
-  //   res.end(media.file.buffer, "binary");  
-  // }
+  console.log((allMedias[0].fileName));
+  allMedias[0].fileName = 'Roses';
 
   res.render("media_list", {
     title: "Media List",

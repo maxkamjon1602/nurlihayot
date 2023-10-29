@@ -11,6 +11,7 @@ const Address = require("./models/address");
 const List = require("./models/list");
 const Post = require("./models/post");
 const Media = require("./models/media");
+const fs = require("fs");
 
 const users = [];
 const addresses = [];
@@ -95,12 +96,11 @@ async function postCreate(index, user, title, description, created, updated, lis
     console.log(`Added post: ${user.lastName} - ${created}, ${title}`);
 }
 
-async function mediaCreate(index, post, fileName, fileType, fileData, fileContentType, size, src, created, updated) {
+async function mediaCreate(index, post, fileName, fileType, filePath, fileContentType, size, src, created, updated) {
     const mediadetail = {
         post: post,
         fileName: fileName,
         fileType: fileType,
-        file: file,
         size: size,
         created: created,
     };
@@ -109,7 +109,7 @@ async function mediaCreate(index, post, fileName, fileType, fileData, fileConten
     
 
     const media = new Media(mediadetail);
-    media.file.data = fs.readFileSync(fileData);
+    media.file.data = fs.readFileSync(filePath);
     media.file.contentType = fileContentType;
     await media.save();
     medias[index] = media;

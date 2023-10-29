@@ -6,7 +6,7 @@ block content
     ul
         each media in mediaList
             li
-                img(src=`/${media.file}`)
+                img(src=`data:image/${media.file.contentType};base64, ${media.file.data.toString('base64')}` width='300px' heigth='300px')
                 a(href=media.url) #{media.post.title} : #{media.post.user} - 
                 if media.fileType=='JPG'
                     span.text-success #{media.fileName}
