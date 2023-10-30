@@ -47,7 +47,24 @@ exports.post_list = asyncHandler(async (req, res, next) => {
 
 // Display detail page for a specific post.
 exports.post_detail = asyncHandler(async (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: post detail: ${req.params.id}`);
+  // Get details of posts, media for specific post
+  const [post, postMedia] = await Promise.all([
+    Post.findById(req.params.id).populate("user").populate("list").exec(),
+    Media.find({ post: req.params.id }).exec(),
+  ]);
+
+  if (post === null){
+    // No posts.
+    const err = new Error("Post not found");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("post_detail", {
+    title: post.title,
+    post: post,
+    postMedia: postMedia,
+  });
 });
 
 // Display post create form on GET.

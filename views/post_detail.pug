@@ -1,9 +1,19 @@
 extends layout
 
 block content
-    h1 Title: #{post.title}
+    h1 
+        a(href=post.user.url) #{post.user.name}
 
-    img(src=`${post.media._id}`)
-    p #[strong #{post.title}]
+    each media in postMedia
+        img(src=`data:image/${media.file.contentType};base64, ${media.file.data.toString('base64')}` width='300px' heigth='300px')
+    p #{post.title}
     p #{post.description}
-    
+    p #[quote #{post.created_formatted}]
+    p #[strong List:]
+        each val, index in post.list
+            a(href=val.url) #{val.name}
+            if index < post.list.length - 1
+                |,
+
+        else
+            p This post is not available.

@@ -1,5 +1,7 @@
 const List = require("../models/list");
 const User = require("../models/user");
+const Post = require("../models/post");
+const Media = require("../models/media");
 const asyncHandler = require("express-async-handler");
 
 // Display list of all lists.
@@ -13,7 +15,39 @@ exports.list_list = asyncHandler(async (req, res, next) => {
 
 // Display detail page for a specific list.
 exports.list_detail = asyncHandler(async (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: list detail: ${req.params.id}`);
+  const [list, postsInList] = await Promise.all([
+    List.findById(req.params.id).populate("user").exec(),
+    Post.find({ list: req.params.id }, "user title created").exec(),
+  ]);
+
+  if (list === null) {
+    // No results.
+    const err = new Error("List not found");
+    err.status = 404;
+    return next(err);
+  }
+
+  var postAndMedia;
+  const mediaInPost = [];
+  for (i=0; i<(Object.keys(postsInList).length); i++) {
+    // mediaInPost.push(await Media.find({ post: postsInList[i].id }).exec());
+    var tempMedia = await Media.find({ post: postsInList[i].id }).exec();
+    var tempPost = [];
+    // var mypost = [];
+    tempPost.push(tempMedia);
+    tempPost.push(postsInList[i]);
+    mediaInPost.push(tempPost);
+  }
+  console.log(mediaInPost[0][1].title);
+  // console.log(mediaInPost[0][0].size);
+  // const mediaInPost = await Media.find({ post: postsInList.id }).exec();
+
+  res.render("list_detail", {
+    title: "Saved Posts",
+    list: list,
+    listPosts: postsInList,
+    postMedia: mediaInPost,
+  });
 });
 
 // Display list create form on GET.
