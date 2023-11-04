@@ -9,15 +9,26 @@ block content
 
         h4 Posts
         
-        //- each mediaArray in postMedia
-        //-     each media in mediaArray
-        //-         img(src=`data:image/${media.file.contentType};base64, ${media.file.data.toString('base64')}` width='300px' heigth='300px')
+        each postMediaArray in postMedia
+            each post in postMediaArray
+                if post[0] === undefined
+                    p /// POST object is displayed below ///
+                    p= post
 
-        dl
-            each post in listPosts
-                dt
-                    a(href=post.url) #{post.title}
-                dd #{post.created_formatted}
+                p= typeof(post[0])
+                //- p= post[0]       
+                hr         
+                //- p= post.title 
+                //- p #[em #{post.description}]
+                //- p #{post.created_formatted}
+                //- img(src=`data:image/${media.file.contentType};base64, ${media.file.data.toString('base64')}` width='300px' heigth='300px')
+            
+
+        //- dl
+        //-     each post in listPosts
+        //-         dt
+        //-             a(href=post.url) #{post.title}
+        //-         dd #{post.created_formatted}
         
-            else
-                p This list has no posts
+        //-     else
+        //-         p This list has no posts

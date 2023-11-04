@@ -17,7 +17,7 @@ exports.list_list = asyncHandler(async (req, res, next) => {
 exports.list_detail = asyncHandler(async (req, res, next) => {
   const [list, postsInList] = await Promise.all([
     List.findById(req.params.id).populate("user").exec(),
-    Post.find({ list: req.params.id }, "user title created").exec(),
+    Post.find({ list: req.params.id }).exec(),
   ]);
 
   if (list === null) {
@@ -38,7 +38,7 @@ exports.list_detail = asyncHandler(async (req, res, next) => {
     tempPost.push(postsInList[i]);
     mediaInPost.push(tempPost);
   }
-  console.log(mediaInPost[0][1].title);
+  console.log(mediaInPost[0]);
   // console.log(mediaInPost[0][0].size);
   // const mediaInPost = await Media.find({ post: postsInList.id }).exec();
 
