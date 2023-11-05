@@ -1,0 +1,10 @@
+extends layout
+
+block content
+    h1
+        a(href=address.user.url) #{title}
+    
+    p= address.lineOne
+    p= address.lineTwo
+    p #{address.city}, #{address.country}. #{address.postcode}
+    p Created: #[i #{address.created_formatted}]

@@ -146,6 +146,6 @@ router.post("/address/:id/update", address_controller.address_update_post);
 router.get("/address/:id", address_controller.address_detail);
 
 // GET request for list of all addresss.
-router.get("/addresses", address_controller.address_list);
+router.get("/addresses/:id", address_controller.address_list);
 
 module.exports = router;

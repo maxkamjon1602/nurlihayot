@@ -1,0 +1,41 @@
+extends layout
+
+block content
+    h1= user.name
+    h3 
+        each val, index in userList
+            a(href=val.url) #{val.name}
+            if index < userList.length - 1
+                |,
+        else
+            p This user is not available.
+
+    p Bio: #{user.bio}
+    p Date of birth: #{user.dob}
+    p Created at: #{user.created_formatted}
+    p 
+        a(href=`/catalog/addresses/${user.id}`) Address: 
+        | #{userAddress[0].lineOne}, #{userAddress[0].city}, #{userAddress[0].postcode}
+    p Tel.: #{user.telephone}
+    p Email: #{user.email}
+    p Accounts:
+    
+    each index in user.accounts
+        if index.kind == "internal"
+            p
+                a(href=user.url) #{index.username}
+        else
+            p #{index.kind} 
+                a(href=`${index.kind}.com`) #{index.uid}
+    
+    each arrPostMedia in postMedia
+        each post in arrPostMedia
+            if post[0] === undefined
+                p= post.title
+                p= post.title 
+                p #[em #{post.description}]
+                p #{post.created_formatted}
+            else 
+                img(src=`data:image/${post[0].file.contentType};base64, ${post[0].file.data.toString('base64')}` width='300px' heigth='300px')
+
+        hr

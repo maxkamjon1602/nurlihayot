@@ -27,20 +27,14 @@ exports.list_detail = asyncHandler(async (req, res, next) => {
     return next(err);
   }
 
-  var postAndMedia;
   const mediaInPost = [];
   for (i=0; i<(Object.keys(postsInList).length); i++) {
-    // mediaInPost.push(await Media.find({ post: postsInList[i].id }).exec());
     var tempMedia = await Media.find({ post: postsInList[i].id }).exec();
     var tempPost = [];
-    // var mypost = [];
     tempPost.push(tempMedia);
     tempPost.push(postsInList[i]);
     mediaInPost.push(tempPost);
   }
-  console.log(mediaInPost[0]);
-  // console.log(mediaInPost[0][0].size);
-  // const mediaInPost = await Media.find({ post: postsInList.id }).exec();
 
   res.render("list_detail", {
     title: "Saved Posts",

@@ -1,6 +1,11 @@
 const User = require("../models/user");
+const Post = require("../models/post");
+const Media = require("../models/media");
+const List = require("../models/list");
+const Address = require("../models/address");
 const { DateTime } = require("luxon");
 const asyncHandler = require("express-async-handler");
+const { errorMonitor } = require("multer-gridfs-storage");
 
 // Display list of all users.
 exports.user_list = asyncHandler(async (req, res, next) => {
@@ -13,7 +18,38 @@ exports.user_list = asyncHandler(async (req, res, next) => {
 
 // Display detail page for a specific user.
 exports.user_detail = asyncHandler(async (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: user detail: ${req.params.id}`);
+  const [user, userAddress, userList, userPost, userMedia] = await Promise.all([
+    User.findById(req.params.id).exec(),
+    Address.find({ user: req.params.id }).exec(),
+    List.find({ user: req.params.id }).exec(),
+    Post.find({ user: req.params.id }).exec(),
+  ]);
+
+  if (user === null) {
+    // No results.
+    const err = new Error("User not found");
+    err.status = 404;
+    return next(err);
+  }
+
+  const postMedia = [];
+  for (i=0; i<(Object.keys(userPost).length); i++) {
+    var tempMedia = await Media.find({ post: userPost[i].id }).exec();
+    var arr = [];
+    arr.push(tempMedia);
+    arr.push(userPost[i]);
+    postMedia.push(arr);
+  }
+  console.log(postMedia);
+
+  res.render("user_detail", {
+    title: "User",
+    user: user,
+    postMedia: postMedia,
+    userAddress: userAddress,
+    userList: userList,
+    
+  })
 });
 
 // Display user create form on GET.
