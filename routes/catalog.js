@@ -97,10 +97,10 @@ router.get("/medias", media_controller.media_list);
 /// LIST ROUTES ///
 
 // GET request for creating list. NOTE This must come before route for id (i.e. display list).
-router.get("/list/create", list_controller.list_create_get);
+router.get("/list/create/:id", list_controller.list_create_get);
 
 // POST request for creating list.
-router.post("/list/create", list_controller.list_create_post);
+router.post("/list/create/:id", list_controller.list_create_post);
 
 // GET request to delete list.
 router.get("/list/:id/delete", list_controller.list_delete_get);
