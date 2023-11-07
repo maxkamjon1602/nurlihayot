@@ -4,8 +4,8 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-  firstName: { type: String, required: true, maxLength: 100 },
-  lastName: { type: String, required: true, maxLength: 100 },
+  firstName: { type: String, maxLength: 100 },
+  lastName: { type: String, maxLength: 100 },
   created: { type: Date, required: true },
   updated: { type: Date },
   dob: { type: Date },

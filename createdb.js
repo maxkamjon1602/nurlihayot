@@ -1,12 +1,14 @@
 #! /usr/bin/env node
-console.log(
-    'This script populates some test users, addresses to your database. Specified database as argument - e.g.: node populatedb "mongodb+srv://cooluser:coolpassword@cluster0.lz91hw2.mongodb.net/local_library?retryWrites=true&w=majority"'
-  );
+// console.log(
+//     'This script populates some test users, addresses to your database. Specified database as argument - e.g.: node populatedb "mongodb+srv://cooluser:coolpassword@cluster0.lz91hw2.mongodb.net/local_library?retryWrites=true&w=majority"'
+//   );
 
 // Get arguments passed on command line
 const userArgs = process.argv.slice(2);
 
 const User = require("./models/user");
+const Credential = require("./models/credential");
+const Authentication = require("./models/authentication");
 const Address = require("./models/address");
 const List = require("./models/list");
 const Post = require("./models/post");
@@ -14,28 +16,67 @@ const Media = require("./models/media");
 const fs = require("fs");
 
 const users = [];
+const credentials = [];
 const addresses = [];
 const lists = [];
 const posts = [];
 const medias = [];
+const authentications = [];
+
 
 const mongoose = require("mongoose");
+const { CLIENT_RENEG_LIMIT } = require("tls");
 mongoose.set("strictQuery", false);
 
 const mongoDB = userArgs[0];
 main().catch((err) => console.log(err));
 
 async function main() {
-    console.log("Debug: About to connect");
+    // console.log("Debug: About to connect");
     await mongoose.connect(mongoDB);
-    console.log("Debug: Should be connected?");
-    await createUsers();
-    await createAddresses();
-    await createLists();
-    await createPosts();
-    await createMedias();
-    console.log("Debug: Closing mongoose");
+    // console.log("Debug: Should be connected?");
+    // await Promise.all([
+    //     await createUsers(),
+    //     await createCredentials(),
+    //     await createAuthentications(),
+    // ]);
+    // await createAddresses();
+    // await createLists();
+    // await createPosts();
+    // await createMedias();
+    // console.log("Debug: Closing mongoose");
+    await authenticateCredential();
     mongoose.connection.close();
+}
+
+async function authenticateCredential() {
+    console.log("Authenticating credentials with user id!");
+    const arrUser = await User.find();
+    const lenArrUser = arrUser.length;
+    for(i=0; i<lenArrUser; i++) {
+        const authExists = await Authentication.findOne({ user: arrUser[i].id }).exec();
+        console.log(authExists);
+        if (typeof authExists.credential !== "undefined") {
+            const arrCred = await Credential.findOne({ id: authExists.credential });
+            // console.log(arrCred);
+            // const cred = new Credential({
+            //     username: arrCred.username,
+            //     password: arrCred.password,
+            //     created: arrCred.created,
+            //     updated: arrCred.updated,
+            //     lastLogin: arrCred.lastLogin,
+            //     numFailAttempts: arrCred.numFailAttempts,
+            //     user: authExists.user,
+            //     _id: authExists.credential,
+            // })
+            // await Credential.findOneAndUpdate( {id: authExists.credential}, cred, {} );
+        }
+    }
+
+
+    // const arrCredv2 = await Credential.find();
+    // console.log(" ----------------------------------- ")
+    // console.log(arrCredv2);
 }
 
 async function userCreate(index, firstName, lastName, created, updated, dateOfBirth, biography, phoneNumber, email, connAccounts) {
@@ -51,6 +92,37 @@ async function userCreate(index, firstName, lastName, created, updated, dateOfBi
     await user.save();
     users[index] = user;
     console.log(`Added user: ${firstName} ${lastName} - ${email}`);
+}
+
+async function credentialCreate(index, username, password, created, updated, lastLogin, numFailAttempts, user) {
+    const credentialdetail = {
+        username: username,
+        password: password,
+        created: created,
+    }
+    if (updated != false) credentialdetail.updated = updated;
+    if (lastLogin != false) credentialdetail.lastLogin = lastLogin;
+    if (numFailAttempts != false) credentialdetail.numFailAttempts = numFailAttempts;
+    if (user != false) credentialdetail.user = user;
+    
+    const credential = new Credential(credentialdetail);
+
+    await credential.save();
+    credentials[index] = credential;
+    console.log(`Added password: ${username} - ${password}, at ${created}`);
+}
+
+async function authenticationCreate(index, user, credential, created, updated, status, online) {
+    const authenticationdetail = { user: user, credential: credential, created }
+    if (updated != false) authenticationdetail.updated = updated;
+    if (status != false) authenticationdetail.status = status;
+    if (online != false) authenticationdetail.online = online;
+
+    const authentication = new Authentication(authenticationdetail);
+
+    await authentication.save();
+    authentications[index] = authentication;
+    console.log(`Added authentication: ${user} - ${credential}`);
 }
 
 async function addressCreate(index, lineOne, secondLine, city, country, postcode, created, updated, user) {
@@ -79,7 +151,7 @@ async function listCreate(index, name, user) {
 
     await list.save();
     lists[index] = list;
-    console.log(`Added list: ${name}, ${user}`);
+    console.log(`Added list: ${name}, `); // ${user}
 }
 
 async function postCreate(index, user, title, description, created, updated, list) {
@@ -134,11 +206,6 @@ async function createUsers() {
                 uid: 'john.wick'
             },
             {
-                kind: 'internal',
-                username: 'mrwick',
-                password: 'mydog'
-            },
-            {
                 kind: 'twitter',
                 uid: 'jwick'
             }]
@@ -156,10 +223,6 @@ async function createUsers() {
             [{  kind: 'facebook',
                 uid: 'bruce.wayne',
             },
-            {   kind: 'internal',
-                username: 'iambatman',
-                password: 'ilovejocker'
-            },
             {   kind: 'twitter',
                 uid: 'bwayne'
             }]
@@ -176,10 +239,6 @@ async function createUsers() {
             "barryalen@central.city",
             [{  kind: 'facebook',
                 uid: 'barry.allen'
-            },
-            {   kind: 'internal',
-                username: 'flash',
-                password: 'savitar'
             },
             {   kind: 'twitter',
                 uid: 'ballen'
@@ -199,10 +258,6 @@ async function createUsers() {
                 uid: 'naruto.uzumaki'
 
             },
-            {   kind: 'internal',
-                username: 'jinchuriki',
-                password: 'ihaveninetails'
-            },
             {   kind: 'twitter',
                 uid: 'unaruto'
             }]
@@ -220,14 +275,77 @@ async function createUsers() {
             [{  kind: 'facebook',
                 uid: 'sidecharacter'
             },
-            {   kind: 'internal',
-                username: 'shadow',
-                password: 'iamnotnpc'
-            },
             {   kind: 'twitter',
                 uid: 'ckageno'
             }]
         ),
+    ]);
+}
+
+async function createCredentials() {
+    console.log("Adding password");
+    await Promise.all([
+        credentialCreate(
+            0,
+            // users[0],
+            "wickkiller07",
+            "mypasswordD0g.",
+            "2023-10-20",
+            "",
+            "",
+            1
+        ),
+        credentialCreate(
+            1,
+            // users[1],
+            "batman",
+            "1amBatman_",
+            "2023-10-22",
+            "",
+            "",
+            1
+        ),
+        credentialCreate(
+            2,
+            // users[2],
+            "redflash",
+            "1Lovenigger.",
+            "2023-10-22",
+            "",
+            "",
+            1
+        ),
+        credentialCreate(
+            3,
+            // users[3],
+            "jinchuriki",
+            "7thHokkage.",
+            "2023-10-25",
+            "",
+            "",
+            9
+        ),
+        credentialCreate(
+            4,
+            // users[4],
+            "npc86",
+            "IamShadow_1.",
+            "2023-10-21",
+            "",
+            "",
+            1
+        ),
+    ]);
+}
+
+async function createAuthentications() {
+    console.log("Adding authentications");
+    await Promise.all([
+        authenticationCreate( 0, users[0], credentials[0], "2023-10-20", "", false, false ),
+        authenticationCreate( 1, users[1], credentials[1], "2023-10-23", "", false, false ),
+        authenticationCreate( 2, users[2], credentials[2], "2023-10-22", "", false, false ),
+        authenticationCreate( 3, users[3], credentials[3], "2023-10-25", "", false, false ),
+        authenticationCreate( 4, users[4], credentials[4], "2023-10-21", "", false, false ),
     ]);
 }
 

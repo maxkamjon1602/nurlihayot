@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const Credential = require("../models/credential");
 const Post = require("../models/post");
 const Media = require("../models/media");
 const List = require("../models/list");

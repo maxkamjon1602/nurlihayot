@@ -5,6 +5,7 @@ const router = express.Router();
 const post_controller = require("../controllers/postController");
 const media_controller = require("../controllers/mediaController");
 const user_controller = require("../controllers/userController");
+const credential_controller = require("../controllers/credentialController");
 const list_controller = require("../controllers/listController");
 const address_controller = require("../controllers/addressController");
 
@@ -63,6 +64,34 @@ router.get("/user/:id", user_controller.user_detail);
 
 // GET request for list of all users.
 router.get("/users", user_controller.user_list);
+
+
+
+/// CREDENTIAL ROUTES ///
+
+// GET request for creating credential. NOTE This must come before route for id (i.e. display credential).
+router.get("/credential/create", credential_controller.credential_create_get);
+
+// POST request for creating credential.
+router.post("/credential/create", credential_controller.credential_create_post);
+
+// GET request to delete credential.
+router.get("/credential/:id/delete", credential_controller.credential_delete_get);
+
+// POST request to delete credential.
+router.post("/credential/:id/delete", credential_controller.credential_delete_post);
+
+// GET request to update credential.
+router.get("/credential/:id/update", credential_controller.credential_update_get);
+
+// POST request to update credential.
+router.post("/credential/:id/update", credential_controller.credential_update_post);
+
+// GET request for one credential.
+router.get("/credential/:id", credential_controller.credential_detail);
+
+// GET request for list of all credentials.
+router.get("/credentials", credential_controller.credential_list);
 
 
 
