@@ -4,11 +4,12 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const CredentialSchema = new Schema({
-  username: { type: String, required: true, maxLength: 50 },
+  username: { type: String, unique: true, required: true, minLength: 4, maxLength: 50 },
   password: { type: String, required: true, minLength: 8 },
+  role: { type: String, default: "Basic", required: true },
   created: { type: Date, required: true },
-  updated: { type: Date, default: "2023-10-20" },
-  lastLogin: { type: Date, default: "2023-10-20" },
+  updated: { type: Date },
+  lastLogin: { type: Date },
   numFailAttempts: { type: Number },
   user: { type: Schema.Types.ObjectId, ref: "User" },
 });

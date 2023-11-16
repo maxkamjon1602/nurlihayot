@@ -32,7 +32,7 @@ const mongoDB = userArgs[0];
 main().catch((err) => console.log(err));
 
 async function main() {
-    // console.log("Debug: About to connect");
+    console.log("Debug: About to connect");
     await mongoose.connect(mongoDB);
     // console.log("Debug: Should be connected?");
     // await Promise.all([
@@ -44,9 +44,16 @@ async function main() {
     // await createLists();
     // await createPosts();
     // await createMedias();
-    // console.log("Debug: Closing mongoose");
-    await authenticateCredential();
+    // await authenticateCredential();
+    await authenticateRememberMe();
+    // await updateCredentialRole();
+    console.log("Debug: Closing mongoose");
     mongoose.connection.close();
+}
+
+async function authenticateRememberMe() {
+    const arrAuthNew = await Authentication.findByIdAndUpdate('6553cfa0f655d90c4fe45e8f', { status: true, remember: true } );
+    if(arrAuthNew) { console.log("Successfully updated!"); }
 }
 
 async function authenticateCredential() {
@@ -55,28 +62,34 @@ async function authenticateCredential() {
     const lenArrUser = arrUser.length;
     for(i=0; i<lenArrUser; i++) {
         const authExists = await Authentication.findOne({ user: arrUser[i].id }).exec();
-        console.log(authExists);
+        const credential = authExists.credential;
+        console.log(credential);
         if (typeof authExists.credential !== "undefined") {
-            const arrCred = await Credential.findOne({ id: authExists.credential });
-            // console.log(arrCred);
-            // const cred = new Credential({
-            //     username: arrCred.username,
-            //     password: arrCred.password,
-            //     created: arrCred.created,
-            //     updated: arrCred.updated,
-            //     lastLogin: arrCred.lastLogin,
-            //     numFailAttempts: arrCred.numFailAttempts,
-            //     user: authExists.user,
-            //     _id: authExists.credential,
-            // })
-            // await Credential.findOneAndUpdate( {id: authExists.credential}, cred, {} );
+            const arrCred = await Credential.findById( credential ).exec();
+            const arrCredUpdated = new Credential({
+                username: arrCred.username,
+                password: arrCred.password,
+                created: arrCred.created,
+                updated: arrCred.updated,
+                lastLogin: arrCred.lastLogin,
+                numFailAttempts: arrCred.numFailAttempts,
+                user: authExists.user,
+                _id: arrCred.id, // This is required, or a new ID will be assigned!
+            });
+            await Credential.findByIdAndUpdate(credential, arrCredUpdated, {});
+            console.log(arrCredUpdated);
         }
     }
+}
 
-
-    // const arrCredv2 = await Credential.find();
-    // console.log(" ----------------------------------- ")
-    // console.log(arrCredv2);
+async function updateCredentialRole() {
+    console.log("Creating new parameter for all instances in credential table");
+    const arrCred = await Credential.find().exec();
+    const arrCredLength = arrCred.length;
+    for (var i=0; i<arrCredLength; i++) {
+        const updatedCred = await Credential.findByIdAndUpdate(arrCred[i].id, { role: 'Basic' }).exec();
+        console.log(updatedCred);
+    }
 }
 
 async function userCreate(index, firstName, lastName, created, updated, dateOfBirth, biography, phoneNumber, email, connAccounts) {
@@ -94,10 +107,11 @@ async function userCreate(index, firstName, lastName, created, updated, dateOfBi
     console.log(`Added user: ${firstName} ${lastName} - ${email}`);
 }
 
-async function credentialCreate(index, username, password, created, updated, lastLogin, numFailAttempts, user) {
+async function credentialCreate(index, username, password, role, created, updated, lastLogin, numFailAttempts, user) {
     const credentialdetail = {
         username: username,
         password: password,
+        role: role,
         created: created,
     }
     if (updated != false) credentialdetail.updated = updated;
@@ -112,10 +126,11 @@ async function credentialCreate(index, username, password, created, updated, las
     console.log(`Added password: ${username} - ${password}, at ${created}`);
 }
 
-async function authenticationCreate(index, user, credential, created, updated, status, online) {
+async function authenticationCreate(index, user, credential, created, updated, status, remember, online) {
     const authenticationdetail = { user: user, credential: credential, created }
     if (updated != false) authenticationdetail.updated = updated;
     if (status != false) authenticationdetail.status = status;
+    if (remember != false) authenticationdetail.remember = remember;
     if (online != false) authenticationdetail.online = online;
 
     const authentication = new Authentication(authenticationdetail);
@@ -287,53 +302,58 @@ async function createCredentials() {
     await Promise.all([
         credentialCreate(
             0,
-            // users[0],
             "wickkiller07",
             "mypasswordD0g.",
+            "Basic",
             "2023-10-20",
             "",
             "",
-            1
+            1,
+            users[0]
         ),
         credentialCreate(
             1,
-            // users[1],
             "batman",
             "1amBatman_",
+            "Basic",
             "2023-10-22",
             "",
             "",
-            1
+            1,
+            users[1]
         ),
         credentialCreate(
             2,
-            // users[2],
             "redflash",
-            "1Lovenigger.",
+            "1Loveqora.",
+            "Basic",
             "2023-10-22",
             "",
             "",
-            1
+            1,
+            users[2]
         ),
         credentialCreate(
             3,
-            // users[3],
             "jinchuriki",
             "7thHokkage.",
+            "Basic",
             "2023-10-25",
             "",
             "",
-            9
+            9,
+            users[3]
         ),
         credentialCreate(
             4,
-            // users[4],
             "npc86",
             "IamShadow_1.",
+            "Basic",
             "2023-10-21",
             "",
             "",
-            1
+            1,
+            users[4]
         ),
     ]);
 }
@@ -341,11 +361,11 @@ async function createCredentials() {
 async function createAuthentications() {
     console.log("Adding authentications");
     await Promise.all([
-        authenticationCreate( 0, users[0], credentials[0], "2023-10-20", "", false, false ),
-        authenticationCreate( 1, users[1], credentials[1], "2023-10-23", "", false, false ),
-        authenticationCreate( 2, users[2], credentials[2], "2023-10-22", "", false, false ),
-        authenticationCreate( 3, users[3], credentials[3], "2023-10-25", "", false, false ),
-        authenticationCreate( 4, users[4], credentials[4], "2023-10-21", "", false, false ),
+        authenticationCreate( 0, users[0], credentials[0], "2023-10-20", "", false, false, false ),
+        authenticationCreate( 1, users[1], credentials[1], "2023-10-23", "", false, false, false ),
+        authenticationCreate( 2, users[2], credentials[2], "2023-10-22", "", false, false, false ),
+        authenticationCreate( 3, users[3], credentials[3], "2023-10-25", "", false, false, false ),
+        authenticationCreate( 4, users[4], credentials[4], "2023-10-21", "", false, false, false ),
     ]);
 }
 

@@ -9,6 +9,8 @@ const credential_controller = require("../controllers/credentialController");
 const list_controller = require("../controllers/listController");
 const address_controller = require("../controllers/addressController");
 
+
+
 /// POST ROUTES ///
 
 // GET catalog home page.
@@ -37,6 +39,7 @@ router.get("/post/:id", post_controller.post_detail);
 
 // GET request for list of all posts.
 router.get("/posts", post_controller.post_list);
+
 
 
 /// USER ROUTES ///

@@ -1,6 +1,10 @@
-const Credential = require("../models/credential");
 const User = require("../models/user");
+const Credential = require("../models/credential");
+const Authentication = require("../models/authentication");
+
+const { DateTime } = require("luxon");
 const asyncHandler = require("express-async-handler");
+const { body, validationResult, ValidationChain, param } = require('express-validator');
 
 // Display list of all credentials.
 exports.credential_list = asyncHandler(async (req, res, next) => {
@@ -40,4 +44,14 @@ exports.credential_update_get = asyncHandler(async (req, res, next) => {
 // Handle credential update on POST.
 exports.credential_update_post = asyncHandler(async (req, res, next) => {
   res.send("NOT IMPLEMENTED: credential update POST");
+});
+
+// Display user update form on GET.
+exports.credential_role_update_get = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: user update GET");
+});
+
+// Handle user update on POST.
+exports.credential_role_update_post = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: user update POST");
 });

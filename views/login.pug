@@ -1,0 +1,26 @@
+extend layout
+
+block content
+  
+  div
+    h1 Login
+    hr
+    form(method='POST' action='')
+      div.form-group
+        label(for=username) Username or email
+        input#username.form-control(type='text', placeholder='Username' name='username' required='true' value=(undefined===username ? '' : username))
+      div.form-group
+        label(for=password) Password
+        input#password.form-control(type='text', placeholder='Password' name='password' required='true')
+      div.form-group
+        div(style='display: inline, margin: 0 auto;')
+            input.checkbox-input(type='checkbox', name='remember', id='remember', checked=mybool)
+            label(for='remember') Remember me
+            a(href='/authentication/reset') Forgot password?
+      
+      button.btn.btn-primary(type='submit') Login
+
+  if errors
+    ul
+      for error in errors
+        li!= error.msg

@@ -9,6 +9,7 @@ const AuthenticationSchema = new Schema({
   created: { type: Date },
   updated: { type: Date },
   status: { type: Boolean }, // verified or not
+  remember: { type: Boolean }, // remember me, or not
   online: { type: Boolean }, // is user online or not
 });
 

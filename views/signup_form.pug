@@ -1,0 +1,32 @@
+extend layout
+
+block content
+    
+  div
+    h1
+      a(href='/authentication/signup') Register
+    hr
+    form(method='POST' action='')
+      div.form-group
+        label(for=username) Username
+        input#username.form-control(type='text', placeholder='Username' name='username' required='true' value=(undefined===username ? '' : username))
+      div.form-group
+        label(for=email) Email
+        input#email.form-control(type='text', placeholder='Email' name='email' required='true' value=(undefined===params ? '' : params.email))
+      div.form-group
+        label(for=password) Password
+        input#password.form-control(type='text', placeholder='Password' name='password' required='true')
+        label(for=passwordConfirmation) Confirm password
+        input#passwordConfirmation.form-control(type='text', placeholder='' name='passwordConfirmation' required='true')
+      div.form-group
+        div(style='display: inline, margin: 0 auto;')
+          //- input.checkbox-input(type='checkbox', name='authentication', id=authentication._id, value=authentication.remember, checked=(undefined===authentication ?  : authentication.checked))
+          //- label(for=authentication._id) Remember me
+          //- a(href='/authentication/reset') Forgot password?
+      
+      button.btn.btn-primary(type='submit') Register
+
+  if errors
+    ul
+      for error in errors
+        li!= error.msg
