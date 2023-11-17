@@ -23,7 +23,7 @@ AuthenticationSchema.virtual("updated_formatted").get(function() {
 
 AuthenticationSchema.virtual("url").get(function() {
   // We don't use array function as we will need the this object
-  return `/catalog/authentication/${this._id}`;
+  return `/authentication/${this._id}`;
 });
 
 module.exports = mongoose.model("Authentication", AuthenticationSchema);

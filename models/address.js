@@ -24,7 +24,7 @@ AddressSchema.virtual("updated_formatted").get(function() {
 
 AddressSchema.virtual("url").get(function() {
     // We don't use array function as we will need the this object
-    return `/catalog/address/${this._id}`;
+    return `/address/${this._id}`;
 });
 
 module.exports = mongoose.model("Address", AddressSchema);

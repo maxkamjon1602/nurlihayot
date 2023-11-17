@@ -9,7 +9,7 @@ const ListSchema = new Schema({
 
 ListSchema.virtual("url").get(function() {
     // We don't use array function as we will need the this object
-    return `/catalog/list/${this._id}`;
+    return `/list/${this._id}`;
 });
 
 module.exports = mongoose.model("List", ListSchema);

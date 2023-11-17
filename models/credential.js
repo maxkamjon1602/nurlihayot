@@ -26,7 +26,7 @@ CredentialSchema.virtual("updated_formatted").get(function() {
 // Virtual for user credentials URL
 CredentialSchema.virtual("url").get(function () {
   // We don't use an arrow function as we'll need the this object
-  return `catalog/credential/${this._id}`;
+  return `/credential/${this._id}`;
 });
 
 // Export model

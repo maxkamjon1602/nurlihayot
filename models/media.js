@@ -14,7 +14,7 @@ const MediaSchema = new Schema({
 });
 
 MediaSchema.virtual("url").get(function() {
-    return `/catalog/media/${this._id}`;
+    return `/media/${this._id}`;
 });
 
 module.exports = mongoose.model("Media", MediaSchema);

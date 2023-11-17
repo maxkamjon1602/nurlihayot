@@ -10,14 +10,16 @@ block content
         else
             p This user is not available.
 
-    p Bio: #{user.bio}
-    p Date of birth: #{user.dob}
-    p Created at: #{user.created_formatted}
+    p Bio: #{user.bio ? user.bio : ''}
+    p Date of birth: #{user.dob ? user.dob : ''}
+    p Created at: #{user.created_formatted ? user.created_formatted : ''}
     p 
-        a(href=`/catalog/addresses/${user.id}`) Address: 
-        | #{userAddress[0].lineOne}, #{userAddress[0].city}, #{userAddress[0].postcode}
-    p Tel.: #{user.telephone}
-    p Email: #{user.email}
+        a(href=`/addresses/${user.id}`) Address: 
+        each address in userAddress
+            if address !== undefined
+                | #{userAddress[0].lineOne}, #{userAddress[0].city}, #{userAddress[0].postcode}
+    p Tel.: #{user.telephone ? user.telephone : ''}
+    p Email: #{user.email ? user.email : ''}
     p Accounts:
     
     each index in user.accounts
@@ -27,6 +29,9 @@ block content
         else
             p #{index.kind} 
                 a(href=`${index.kind}.com`) #{index.uid}
+
+    p Upgrade to admin #[span #[i icon]]
+    //- a(href=`/credential/${user.id}/credential_role_update_post`) Get admin
     
     each arrPostMedia in postMedia
         each post in arrPostMedia

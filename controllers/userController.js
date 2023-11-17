@@ -33,6 +33,10 @@ exports.user_detail = asyncHandler(async (req, res, next) => {
     return next(err);
   }
 
+  function stringify(value) {
+    return value ? value : '';
+  }
+
   const postMedia = [];
   for (i=0; i<(Object.keys(userPost).length); i++) {
     var tempMedia = await Media.find({ post: userPost[i].id }).exec();
@@ -41,7 +45,6 @@ exports.user_detail = asyncHandler(async (req, res, next) => {
     arr.push(userPost[i]);
     postMedia.push(arr);
   }
-  console.log(postMedia);
 
   res.render("user_detail", {
     title: "User",

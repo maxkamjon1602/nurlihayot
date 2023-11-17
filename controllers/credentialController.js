@@ -46,12 +46,53 @@ exports.credential_update_post = asyncHandler(async (req, res, next) => {
   res.send("NOT IMPLEMENTED: credential update POST");
 });
 
-// Display user update form on GET.
+// 
 exports.credential_role_update_get = asyncHandler(async (req, res, next) => {
   res.send("NOT IMPLEMENTED: user update GET");
 });
 
-// Handle user update on POST.
-exports.credential_role_update_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: user update POST");
-});
+exports.credential_role_update_post = [
+  body("role").escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const credential = new Credential({
+      role: "admin",
+      _id: req.params.id,
+    });
+
+    if(!errors.isEmpty()){
+      res.render("user_admin", {
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      if (role === "admin") {
+        await Credential.findById(req.params.id)
+          .then((user) => {
+            if(user.role !== "admin") {
+              user.role = role;
+              user.save((err) => {
+                //MongoDB error checker
+                if(err) {
+                  res
+                    .status("400")
+                    .json({ message: 'An error occured', error: err.message });
+                  process.exit(1);
+                }
+                res.status("201").json({ message: 'Update successful', user });
+              });
+            } else {
+              res.status(400).json({ message: "User is already an Admin" });
+            }
+          })
+          .catch((error) => {
+            res
+              .status(400)
+              .json({ message: 'An error occured', error: error.message });
+          });
+      }
+    }
+  })
+];

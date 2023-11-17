@@ -35,11 +35,8 @@ exports.authentication_login_post = [
     .withMessage("Password must be specified")
     .custom(async (value, obj) => {
       const user = await Credential.findOne({ username: obj.req.body.username });
-      if (user){
-        const credential = await Credential.findOne({ username: obj.req.body.username });
-        if (value !== credential.password) {
-          throw new Error('Password incorrect');
-        }
+      if (user && value !== user.password){
+        throw new Error('Password incorrect');
       }
     }),
   body("remember").escape(),
