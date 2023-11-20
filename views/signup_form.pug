@@ -12,12 +12,12 @@ block content
         input#username.form-control(type='text', placeholder='Username' name='username' required='true' value=(undefined===username ? '' : username))
       div.form-group
         label(for=email) Email
-        input#email.form-control(type='text', placeholder='Email' name='email' required='true' value=(undefined===params ? '' : params.email))
+        input#email.form-control(type='email', placeholder='Email' name='email' required='true' value=(undefined===params ? '' : params.email))
       div.form-group
         label(for=password) Password
-        input#password.form-control(type='text', placeholder='Password' name='password' required='true')
+        input#password.form-control(type='password', placeholder='Password' name='password' required='true' autocomplete="off")
         label(for=passwordConfirmation) Confirm password
-        input#passwordConfirmation.form-control(type='text', placeholder='' name='passwordConfirmation' required='true')
+        input#passwordConfirmation.form-control(type='password', placeholder='' name='passwordConfirmation' required='true' autocomplete="off")
       div.form-group
         div(style='display: inline, margin: 0 auto;')
           //- input.checkbox-input(type='checkbox', name='authentication', id=authentication._id, value=authentication.remember, checked=(undefined===authentication ?  : authentication.checked))

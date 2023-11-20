@@ -96,6 +96,9 @@ router.get("/credential/:id", credential_controller.credential_detail);
 // GET request for list of all credentials.
 router.get("/credentials", credential_controller.credential_list);
 
+router.get("/credential/:id/role", credential_controller.credential_role_get)
+router.post("/credential/:id/role", credential_controller.credential_role_post)
+
 
 
 /// MEDIA ROUTES ///

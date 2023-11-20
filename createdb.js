@@ -26,6 +26,7 @@ const authentications = [];
 
 const mongoose = require("mongoose");
 const { CLIENT_RENEG_LIMIT } = require("tls");
+const authentication = require("./models/authentication");
 mongoose.set("strictQuery", false);
 
 const mongoDB = userArgs[0];
@@ -45,10 +46,30 @@ async function main() {
     // await createPosts();
     // await createMedias();
     // await authenticateCredential();
-    await authenticateRememberMe();
+    // await authenticateRememberMe();
     // await updateCredentialRole();
+    await emailVerify();
     console.log("Debug: Closing mongoose");
     mongoose.connection.close();
+}
+
+async function emailVerify() {
+    const credential = await Credential.findOne({ username: "uzbek.tashkent"}).exec();
+    console.log(credential.id);
+
+    if (credential) {
+        const user = await User.findById(credential.user).exec();
+        if (user && credential) {
+            const authentication = await Authentication.find().count().exec();
+            console.log(user.id);
+            console.log(authentication);
+            await authenticationCreate(authentication, user.id, credential.id, new Date(), new Date(), true, false, false );
+        }
+
+    } else {
+        console.log("User not found!");
+    }
+
 }
 
 async function authenticateRememberMe() {

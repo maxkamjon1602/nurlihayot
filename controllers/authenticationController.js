@@ -26,6 +26,11 @@ exports.authentication_login_post = [
       const credential = await Credential.findOne({ username: value });
       if (credential === null) {
         throw new Error('Username not found');
+      } else {
+        const arrAuth = await Authentication.findOne({ credential: credential.id });
+        if (!arrAuth) {
+          throw new Error('Not verified email');
+        }
       }
     }),
   body("password")
@@ -61,7 +66,6 @@ exports.authentication_login_post = [
       return;
     } else {
       const arrCred = await Credential.findOne({ username: req.body.username});
-
       const arrAuth = await Authentication.findOne({ credential: arrCred.id });
       const authentication = new Authentication({
         user: arrCred.user,
@@ -77,7 +81,7 @@ exports.authentication_login_post = [
 
       const authUser = await Authentication.findByIdAndUpdate(arrAuth.id, authentication, {});
       // Redirect to home page.
-      res.redirect('/catalog')
+      res.redirect('/')
     }
   })
 ];

@@ -52,8 +52,7 @@ exports.user_detail = asyncHandler(async (req, res, next) => {
     postMedia: postMedia,
     userAddress: userAddress,
     userList: userList,
-    
-  })
+  });
 });
 
 // Display user create form on GET.

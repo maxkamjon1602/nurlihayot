@@ -30,9 +30,6 @@ block content
             p #{index.kind} 
                 a(href=`${index.kind}.com`) #{index.uid}
 
-    p Upgrade to admin #[span #[i icon]]
-    //- a(href=`/credential/${user.id}/credential_role_update_post`) Get admin
-    
     each arrPostMedia in postMedia
         each post in arrPostMedia
             if post[0] === undefined
@@ -43,4 +40,21 @@ block content
             else 
                 img(src=`data:image/${post[0].file.contentType};base64, ${post[0].file.data.toString('base64')}` width='300px' heigth='300px')
 
-        hr
+    hr
+
+    p Upgrade to admin #[span #[i icon]]
+    a(href=`/credential/${user.id}/role`) Become Admin
+    
+
+
+
+    //- script !{getAdmin}
+    //- script.
+    //-     const btnGetAdmin = document.getElementById("getAdmin");
+    //-     btnGetAdmin.addEventListener("click", getAdmin);
+    //-     function getAdmin(){
+    //-         var url = window.location.pathname;
+    //-         var id = url.substring(url.lastIndexOf('/') + 1);
+
+    //-         console.log(id);
+    //-     }
