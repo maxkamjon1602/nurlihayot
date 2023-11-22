@@ -1,0 +1,42 @@
+extends layout
+
+block content
+  h1 #{title}
+  h2= undefined === user.name ? user.email : user.name
+  
+  form(method='POST' action='' onsubmit="return confirm('Do really want to delete the account?');")
+    button.btn.btn-primary(type='submit' style='margin:1.2em 0;') Delete account
+    if del
+      div.form-group
+        p #[strong Do you want to delete all elements below?]
+        input#userid.form-control(type='hidden', name='userid', required='true', value=user._id )
+
+      div.form-group  
+        -// checkbox (posts, lists, blogs, and so on)
+        for val in [userPosts, userLists]
+          
+          input.checkbox-input(type='checkbox', name='element', id=val.lname, value=val.lname, checked=val.checked style='margin:0; padding:0;')
+          |  
+          label(for=val.name style='margin:0; padding:0; font-size:1.1em;') #{val.lname} (#{val.length})
+          br
+        
+      div.form-group
+        p.text-secondary(style='margin:0;') If you delete your account, all posts will be deleted.
+        p(style='margin:0;') Please #[strong uncheck] elements above to keep your content visible for other users.
+        - del = false
+      div.form-group
+        div(style='border:1px solid orange; color:1em solid grey; padding:0.5em; display:inline; height:auto; width:auto;')
+          input.checkbox-input(type='checkbox', name='confirm', id='confirm')
+          |  
+          label(for='confirm') #[strong I confirm that I will no longer have access and restore any data from my account!]
+            
+    
+
+  if errors
+    ul
+      for error in errors
+        li!= error.msg
+
+
+  script.
+    console.log("Hello World!")

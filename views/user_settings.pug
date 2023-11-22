@@ -1,0 +1,28 @@
+extends layout
+
+block content
+
+  h1 Settings
+
+  div#account
+    h3 Account settings
+    p Username
+    p Email
+    p Telephone
+    p Firstname, Lastname
+    p Date of birth
+    p Bio
+
+  div#security
+    h3 Security settings
+    p Password
+  
+  div#accountType
+    h3 Account type
+    p Upgrade to admin #[span #[i icon]]
+    a(href=`/credential/${user.id}/role`) Become Admin
+    
+  hr
+  div#user_delete
+    h3 Delete account
+    a(href=`/user/${user.id}/settings/delete`) Delete Account

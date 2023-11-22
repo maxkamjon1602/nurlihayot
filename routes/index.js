@@ -51,16 +51,18 @@ router.get("/user/create", user_controller.user_create_get);
 router.post("/user/create", user_controller.user_create_post);
 
 // GET request to delete user.
-router.get("/user/:id/delete", user_controller.user_delete_get);
+router.get("/user/:id/settings/delete", user_controller.user_delete_get);
 
 // POST request to delete user.
-router.post("/user/:id/delete", user_controller.user_delete_post);
+router.post("/user/:id/settings/delete", user_controller.user_delete_post);
 
 // GET request to update user.
-router.get("/user/:id/update", user_controller.user_update_get);
+router.get("/user/:id/settings/update", user_controller.user_update_get);
 
 // POST request to update user.
-router.post("/user/:id/update", user_controller.user_update_post);
+router.post("/user/:id/settings/update", user_controller.user_update_post);
+
+router.get("/user/:id/settings", user_controller.user_settings);
 
 // GET request for one user.
 router.get("/user/:id", user_controller.user_detail);
@@ -98,6 +100,7 @@ router.get("/credentials", credential_controller.credential_list);
 
 router.get("/credential/:id/role", credential_controller.credential_role_get)
 router.post("/credential/:id/role", credential_controller.credential_role_post)
+
 
 
 

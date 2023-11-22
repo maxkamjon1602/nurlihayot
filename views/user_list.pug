@@ -6,8 +6,8 @@ block content
     ul
     each user in userList
         li
-            a(href=user.url) Read more - #{user.name}
-            |  (#{user.dob_yyyy_mm_dd})
+            a(href=user.url) #{user.name ? user.name : user.email}
+            |  #{user.dob_yyyy_mm_dd ? `(${user.dob_yyyy_mm_dd})` : ''}
 
     else
         li There are no users.

@@ -41,11 +41,8 @@ block content
                 img(src=`data:image/${post[0].file.contentType};base64, ${post[0].file.data.toString('base64')}` width='300px' heigth='300px')
 
     hr
-
-    p Upgrade to admin #[span #[i icon]]
-    a(href=`/credential/${user.id}/role`) Become Admin
+    a(href=`${user.id}/settings/`) Settings
     
-
 
 
     //- script !{getAdmin}
