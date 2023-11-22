@@ -3,7 +3,16 @@
 /**
  * Module dependencies.
  */
+var args = process.argv.slice(2);
+//
+// nvm use 18
+// nvm use 20
+// nvm use (node version)
+//
+// node --env-file .env ./src/index.js
 
+console.log(args);
+console.log(`The text follows: ${process.env.MYVAR}`);
 var app = require('../app');
 var debug = require('debug')('nurlihayot-01:server');
 var http = require('http');
