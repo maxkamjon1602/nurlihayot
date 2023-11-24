@@ -14,6 +14,7 @@ const List = require("./models/list");
 const Post = require("./models/post");
 const Media = require("./models/media");
 const fs = require("fs");
+const jwt = require("jsonwebtoken");
 
 const users = [];
 const credentials = [];
@@ -29,7 +30,7 @@ const { CLIENT_RENEG_LIMIT } = require("tls");
 const authentication = require("./models/authentication");
 mongoose.set("strictQuery", false);
 
-const mongoDB = userArgs[0];
+const mongoDB = process.env.MONGODB_URI || userArgs[0];
 main().catch((err) => console.log(err));
 
 async function main() {
@@ -54,10 +55,11 @@ async function main() {
 }
 
 async function emailVerify() {
-    const credential = await Credential.findOne({ username: "uzbek.tashkent"}).exec();
+    const credential = await Credential.findOne({ username: userArgs[0]}).exec();
+    const authentication = await Authentication.findOne({ credential: credential.id }).exec();
     console.log(credential.id);
 
-    if (credential) {
+    if (credential && !authentication) {
         const user = await User.findById(credential.user).exec();
         if (user && credential) {
             const authentication = await Authentication.find().count().exec();
@@ -67,7 +69,7 @@ async function emailVerify() {
         }
 
     } else {
-        console.log("User not found!");
+        console.log("User not found! Or Authentication exists!");
     }
 
 }

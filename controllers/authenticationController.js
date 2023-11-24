@@ -2,6 +2,8 @@ const User = require("../models/user");
 const Credential = require("../models/credential");
 const Authentication = require("../models/authentication");
 
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const { DateTime } = require("luxon");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult, ValidationChain, param } = require('express-validator');
@@ -19,30 +21,39 @@ exports.authentication_login_post = [
   // Validate and sanitize fields.
   body("username")
     .trim()
-    .isLength({ min: 4})
+    .isLength({ min: 4, max: 54})
     .escape()
     .withMessage("Username must be specified")
     .custom(async value => {
       const credential = await Credential.findOne({ username: value });
       if (credential === null) {
         throw new Error('Username not found');
-      } else {
-        const arrAuth = await Authentication.findOne({ credential: credential.id });
-        if (!arrAuth) {
-          throw new Error('Not verified email');
-        }
       }
-    }),
+
+      const arrAuth = await Authentication.findOne({ credential: credential.id });
+      if (!arrAuth) {
+        throw new Error('Not verified email');
+      }
+      }),
   body("password")
     .trim()
-    .isLength({ min: 8 })
+    .isLength({ min: 8, max: 254 })
     .escape()
     .withMessage("Password must be specified")
-    .custom(async (value, obj) => {
-      const user = await Credential.findOne({ username: obj.req.body.username });
-      if (user && value !== user.password){
+    .custom(async (value, { req }) => {
+      const user = await Credential.findOne({ username: req.body.username });
+      if (user) {
+        bcrypt.compare(value, user.password).then(function (result) {
+          if (!result) {
+            throw new Error('Password incorrect');
+          }
+        });
+      } else {
         throw new Error('Password incorrect');
       }
+      // if (user && value !== user.password){
+      //   throw new Error('Password incorrect');
+      // }
     }),
   body("remember").escape(),
   
@@ -95,7 +106,7 @@ exports.authentication_signup_post = [
   // Validate and sanitize fields.
   body("username")
     .trim()
-    .isLength({ min: 4 })
+    .isLength({ min: 4, max: 33 })
     .escape()
     .withMessage("Username must be specified")
     .custom(async value => {
@@ -115,8 +126,8 @@ exports.authentication_signup_post = [
         throw new Error('Email already in user');
       }
     }),
-  body("password").trim().isLength({ min: 8 }).escape().withMessage("Password must be specified"),
-  body("passwordConfirmation").custom((value, { req }) => {
+  body("password").trim().isLength({ min: 8, max: 30 }).escape().withMessage("Password must be specified"),
+  body("passwordConfirmation").trim().isLength({ min: 8, max: 30}).escape().custom((value, { req }) => {
     return value === req.body.password;
   }),
 
@@ -144,19 +155,24 @@ exports.authentication_signup_post = [
     } else {
       // Date from form is valid. Create user and credential.
       await user.save();
-
       const newUser = await User.findOne({ email: user.email }).exec();
-      console.log(newUser);
-      const credential = new Credential({
+
+      const credentialdetail = {
         username: req.body.username,
         password: req.body.password,
         role: "Basic",
         created: new Date(),
         updated: new Date(),
         user: newUser,
-      });
-      await credential.save();
+      }
 
+      const saltRounds = 12;
+      bcrypt.hash(credentialdetail.password, saltRounds).then(function(hash) {
+        credentialdetail.password = hash;
+        const credential = new Credential(credentialdetail);
+        credential.save();
+      });
+      
       // Redirect to home page.
       res.redirect(`${newUser.id}/verify`);
     }

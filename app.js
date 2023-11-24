@@ -12,12 +12,10 @@ const authenticationRouter = require('./routes/authenticationRouter'); // Import
 
 const app = express();
 
-// mongodb+srv://unnamed0001:counter-strike1.6@cluster0.bhnkwld.mongodb.net/?retryWrites=true&w=majority
 // Set up mongoose connection
-
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
-const dev_db_url = "mongodb+srv://unnamed0001:counter-strike1.6@cluster0.bhnkwld.mongodb.net/?retryWrites=true&w=majority";
+// const dev_db_url = "Mongo db url here";
 const mongoDB = process.env.MONGODB_URI || dev_db_url;
 
 main().catch((err) => console.log(err));
