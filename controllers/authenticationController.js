@@ -67,6 +67,8 @@ exports.authentication_login_post = [
       mybool = true;
     }
 
+    console.log("Checkpoint: 25/02/2024.");
+
     if (!errors.isEmpty()) {
       // There are errors. Render form again with sanitized values/error messages.
       res.render("login", {
