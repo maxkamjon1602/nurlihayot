@@ -2,6 +2,7 @@ extends layout
 
 block content
     h1= user.name
+    img(src=`data:image/${avatar.file.contentType};base64, ${avatar.file.data.toString('base64')}` width='150px' heigth='150px')
     h3 
         each val, index in userList
             a(href=val.url) #{val.name}

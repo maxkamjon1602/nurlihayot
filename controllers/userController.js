@@ -2,6 +2,7 @@ const User = require("../models/user");
 const Credential = require("../models/credential");
 const Post = require("../models/post");
 const Media = require("../models/media");
+const Avatar = require("../models/avatar");
 const List = require("../models/list");
 const Address = require("../models/address");
 const Authentication = require("../models/authentication");
@@ -21,11 +22,12 @@ exports.user_list = asyncHandler(async (req, res, next) => {
 
 // Display detail page for a specific user.
 exports.user_detail = asyncHandler(async (req, res, next) => {
-  const [user, userAddress, userList, userPost, userMedia] = await Promise.all([
+  const [user, userAddress, userList, userPost, userAvatar] = await Promise.all([
     User.findById(req.params.id).exec(),
     Address.find({ user: req.params.id }).exec(),
     List.find({ user: req.params.id }).exec(),
     Post.find({ user: req.params.id }).exec(),
+    Avatar.findOne({ user: req.params.id }).exec(),
   ]);
 
   if (user === null) {
@@ -52,6 +54,7 @@ exports.user_detail = asyncHandler(async (req, res, next) => {
     title: "User",
     user: user,
     postMedia: postMedia,
+    avatar: userAvatar,
     userAddress: userAddress,
     userList: userList,
   });

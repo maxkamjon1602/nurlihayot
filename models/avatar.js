@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const MediaSchema = new Schema({
-    post: { type: Schema.Types.ObjectId, ref: "Post" },
+const AvatarSchema = new Schema({
+    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     fileName: { type: String },
     fileType: { type: String },
     file: { data: Buffer, contentType: String },
@@ -13,8 +13,8 @@ const MediaSchema = new Schema({
     updated: { type: Date },
 });
 
-MediaSchema.virtual("url").get(function() {
-    return `/media/${this._id}`;
+AvatarSchema.virtual("url").get(function() {
+    return `/avatar/${this._id}`;
 });
 
-module.exports = mongoose.model("Media", MediaSchema);
+module.exports = mongoose.model("Avatar", AvatarSchema);

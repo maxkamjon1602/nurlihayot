@@ -4,8 +4,8 @@
 //   );
 
 // Get arguments passed on command line
-const userArgs = process.argv.slice(2);
 
+require('dotenv').config();
 const User = require("./models/user");
 const Credential = require("./models/credential");
 const Authentication = require("./models/authentication");
@@ -13,6 +13,7 @@ const Address = require("./models/address");
 const List = require("./models/list");
 const Post = require("./models/post");
 const Media = require("./models/media");
+const Avatar = require("./models/avatar");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
 
@@ -22,34 +23,37 @@ const addresses = [];
 const lists = [];
 const posts = [];
 const medias = [];
+const avatars = [];
 const authentications = [];
-
 
 const mongoose = require("mongoose");
 const { CLIENT_RENEG_LIMIT } = require("tls");
 const authentication = require("./models/authentication");
 mongoose.set("strictQuery", false);
 
-const mongoDB = process.env.MONGODB_URI || userArgs[0];
+const userArgs = process.argv.slice(2);
+
+const mongoDB = process.env.MONGODB_URI;
 main().catch((err) => console.log(err));
 
 async function main() {
     console.log("Debug: About to connect");
     await mongoose.connect(mongoDB);
-    // console.log("Debug: Should be connected?");
-    // await Promise.all([
-    //     await createUsers(),
-    //     await createCredentials(),
-    //     await createAuthentications(),
-    // ]);
-    // await createAddresses();
-    // await createLists();
-    // await createPosts();
-    // await createMedias();
+    console.log("Debug: Should be connected?");
+    await Promise.all([
+        await createUsers(),
+        await createCredentials(),
+        await createAuthentications(),
+    ]);
+    await createAddresses();
+    await createLists();
+    await createPosts();
+    await createMedias();
+    await createAvatars();
     // await authenticateCredential();
     // await authenticateRememberMe();
     // await updateCredentialRole();
-    await emailVerify();
+    // await emailVerify();
     console.log("Debug: Closing mongoose");
     mongoose.connection.close();
 }
@@ -208,12 +212,12 @@ async function postCreate(index, user, title, description, created, updated, lis
 
 async function mediaCreate(index, post, fileName, fileType, filePath, fileContentType, size, src, created, updated) {
     const mediadetail = {
-        post: post,
         fileName: fileName,
         fileType: fileType,
         size: size,
         created: created,
     };
+    if (post != false) mediadetail.post = post;
     if (src != false) mediadetail.src = src;
     if (updated != updated) mediadetail.updated = updated;
     
@@ -224,6 +228,26 @@ async function mediaCreate(index, post, fileName, fileType, filePath, fileConten
     await media.save();
     medias[index] = media;
     console.log(`Added media: ${fileName}.${fileType}, ${size}`);
+}
+
+async function avatarCreate(index, user, fileName, fileType, filePath, fileContentType, size, src, created, updated) {
+    const avatardetail = {
+        user: user,
+        fileName: fileName,
+        fileType: fileType,
+        size: size,
+        created: created,
+    };
+    if (src != false) avatardetail.src = src;
+    if (updated != updated) avatardetail.updated = updated;
+    
+
+    const avatar = new Avatar(avatardetail);
+    avatar.file.data = fs.readFileSync(filePath);
+    avatar.file.contentType = fileContentType;
+    await avatar.save();
+    avatars[index] = avatar;
+    console.log(`Added avatar: ${fileName}.${fileType}, ${size}`);
 }
 
 async function createUsers() {
@@ -510,9 +534,9 @@ async function createMedias() {
             posts[0],
             "Iceberg",
             "jpg",
-            "../uploads/IMG_1.JPG",
+            "./uploads-post/img-1.jpg",
             'image/png',
-            5488395,
+            263172,
             "",
             "2018-01-04",
             ""
@@ -521,9 +545,9 @@ async function createMedias() {
             posts[1],
             "Violet-flowers",
             "jpg",
-            "../uploads/IMG_2.JPG",
+            "./uploads-post/img-2.jpg",
             'image/png',
-            4520899,
+            357920,
             "",
             "2018-05-12",
             ""
@@ -532,9 +556,9 @@ async function createMedias() {
             posts[1],
             "Mighty-trees",
             "jpg",
-            "../uploads/IMG_3.JPG", 
+            "./uploads-post/img-3.jpg",
             "image/png",
-            11121241,
+            491193,
             "",
             "2018-05-14",
             ""
@@ -543,9 +567,9 @@ async function createMedias() {
             posts[3],
             "Dream-path",
             "jpg",
-            "../uploads/IMG_6.JPG", 
+            "./uploads-post/img-4.jpg", 
             "image/png",
-            14022292,
+            288478,
             "",
             "2017-07-22",
             ""
@@ -554,11 +578,84 @@ async function createMedias() {
             posts[2],
             "Queen-Lilith",
             "jpg",
-            "../uploads/IMG_10.JPG", 
+            "./uploads-post/img-5.jpg", 
             "image/png",
-            2545400,
+            365083,
             "",
             "2017-07-22",
+            ""
+        ),
+        mediaCreate(5,
+            posts[1],
+            "Queen-Lilith",
+            "jpg",
+            "./uploads-post/img-6.jpg", 
+            "image/png",
+            247375,
+            "",
+            "2017-07-22",
+            ""
+        ),
+    ]);
+}
+
+
+async function createAvatars() {
+    console.log("Adding avatars");
+    await Promise.all([
+        avatarCreate(6,
+            users[0],
+            "Avatar",
+            "jpg",
+            "./uploads-avatar/img-1.PNG",
+            'image/png',
+            8046,
+            "",
+            "2024-03-01",
+            ""
+        ),
+        avatarCreate(7,
+            users[1],
+            "Avatar",
+            "jpg",
+            "./uploads-avatar/img-2.PNG",
+            'image/png',
+            85142,
+            "",
+            "2024-03-01",
+            ""
+        ),
+        avatarCreate(8,
+            users[2],
+            "Avatar",
+            "jpg",
+            "./uploads-avatar/img-3.PNG", 
+            "image/png",
+            48914,
+            "",
+            "2024-03-01",
+            ""
+        ),
+        avatarCreate(9,
+            users[3],
+            "Avatar",
+            "jpg",
+            "./uploads-avatar/img-5.PNG", 
+            "image/png",
+            152313,
+            "",
+            "2024-03-01",
+            ""
+        ),
+        avatarCreate(10,
+            users[4],
+            "Avatar",
+            "jpg",
+            "./uploads-avatar/img-7.PNG", 
+            "image/png",
+            289124,
+            "",
+            "2024-03-01",
             ""
         ),
     ]);
