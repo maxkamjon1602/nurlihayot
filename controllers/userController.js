@@ -14,9 +14,20 @@ const { body, validationResult, param } = require("express-validator");
 // Display list of all users.
 exports.user_list = asyncHandler(async (req, res, next) => {
   const allUsers = await User.find().sort({ lastName: 1 }).sort({ email: 1}).exec();
+
+  const users = [];
+  for (i=0; i<(Object.keys(allUsers).length); i++) {
+    var tempAvatar = await Avatar.findOne({ user: allUsers[i].id }).exec();
+    var arr = [];
+    arr.push(tempAvatar);
+    arr.push(allUsers[i]);
+    users.push(arr);
+  }
+
   res.render("user_list", {
     title: "User List",
     userList: allUsers,
+    users: users,
   })
 });
 

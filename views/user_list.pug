@@ -3,11 +3,19 @@ extends layout
 block content
     h1= title
 
-    ul
-    each user in userList
-        li
-            a(href=user.url) #{user.name ? user.name : user.email}
-            |  #{user.dob_yyyy_mm_dd ? `(${user.dob_yyyy_mm_dd})` : ''}
+    ul(class='user_list-ul')
+        each user in users
+            li(class="container-fluid user_list-li")
+                div(class="row")
+                    div(class="col-xs-3")
+                        img(src=`data:image/${user[0].file.contentType};base64, ${user[0].file.data.toString('base64')}` width='50em' height='50em' class='user_list-img')
+                    div(class="col-xs-9 user_list-name justify-content-center align-self-center")
+                        a(class="align-middle" href=user[1].url) #{user[1].name ? user[1].name : user[1].email}
 
-    else
-        li There are no users.
+                //- div(class="row")
+
+                //- div(class="row")
+                //-     |  #{user[1].dob_yyyy_mm_dd ? `(${user[1].dob_yyyy_mm_dd})` : ''}
+
+        else
+            li There are no users.
