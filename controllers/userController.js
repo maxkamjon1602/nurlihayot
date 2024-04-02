@@ -31,14 +31,19 @@ exports.user_list = asyncHandler(async (req, res, next) => {
   })
 });
 
+
+
+
+
 // Display detail page for a specific user.
 exports.user_detail = asyncHandler(async (req, res, next) => {
-  const [user, userAddress, userList, userPost, userAvatar] = await Promise.all([
+  const [user, userAddress, userList, userPost, userAvatar, username] = await Promise.all([
     User.findById(req.params.id).exec(),
     Address.find({ user: req.params.id }).exec(),
     List.find({ user: req.params.id }).exec(),
     Post.find({ user: req.params.id }).exec(),
     Avatar.findOne({ user: req.params.id }).exec(),
+    Credential.findOne({ user: req.params.id }).exec(),
   ]);
 
   if (user === null) {
@@ -54,22 +59,57 @@ exports.user_detail = asyncHandler(async (req, res, next) => {
 
   const postMedia = [];
   for (i=0; i<(Object.keys(userPost).length); i++) {
-    var tempMedia = await Media.find({ post: userPost[i].id }).exec();
+    var tempMedia = await Media.findOne({ post: userPost[i].id }).exec();
     var arr = [];
     arr.push(tempMedia);
     arr.push(userPost[i]);
     postMedia.push(arr);
   }
 
-  res.render("user_detail", {
-    title: "User",
-    user: user,
-    postMedia: postMedia,
-    avatar: userAvatar,
-    userAddress: userAddress,
-    userList: userList,
-  });
+  if(req.accepts('json') == "10"){
+    res.json("Hello World");
+  } else {
+    res.render("user_detail", {
+      title: "User",
+      user: user,
+      // postMedia: postMedia,
+      avatar: userAvatar,
+      userAddress: userAddress,
+      userList: userList,
+      username: username.username,
+    });
+  }
+
 });
+
+
+exports.user_detail_post = asyncHandler(async (req, res, next) => {
+  
+  const obj = {title: "Universe"};
+  const myJSON = JSON.stringify(obj);
+  const myVar = req.query;
+  
+
+  // if(req.accepts('json') == "10"){
+  //   res.send(myJSON);
+  // } else {
+  //   res.send("Error");
+  // }
+  
+  if(req.xhr){
+    res.send(myJSON);
+  } else if(req.accepts('json')) {
+    res.json(`${myVar}`);
+  } else {
+    res.json(`{code: "Error"}`);
+  }
+});
+
+
+
+
+
+
 
 // Display user create form on GET.
 exports.user_create_get = asyncHandler(async (req, res, next) => {

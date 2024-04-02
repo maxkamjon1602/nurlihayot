@@ -1,48 +1,83 @@
 extends layout
 
 block content
-    //- <ul class="nav nav-tabs">
-    //- <li class="active"><a href="#">Home</a></li>
-    //- <li class="dropdown">
-    //-     <a class="dropdown-toggle" data-toggle="dropdown" href="#">Menu 1
-    //-     <span class="caret"></span></a>
-    //-     <ul class="dropdown-menu">
-    //-     <li><a href="#">Submenu 1-1</a></li>
-    //-     <li><a href="#">Submenu 1-2</a></li>
-    //-     <li><a href="#">Submenu 1-3</a></li>
-    //-     </ul>
-    //- </li>
-    //- <li><a href="#">Menu 2</a></li>
-    //- <li><a href="#">Menu 3</a></li>
-    //- </ul>
-
-    ul(class="container-fluid nav nav-tabs user_details-ul")
-        li(class="dropdown" id="li-first")
-            a(class="dropdown-toggle" data-bs-toggle="dropdown" href="#") Username
+    ul(class="container-fluid nav nav-tabs udetail-umenu px-2 pt-2")
+        li(class="dropdown flex-grow-1" id="udetail-uname")
+            a(class="dropdown-toggle" id="udetail-uname-a" data-bs-toggle="dropdown" href="#")= username
                 span(class="caret")
             ul(class="dropdown-menu")
                 li
-                    a(href="#") Switch account window
+                    a(href="#" id="udetail-acc-change") Switch account
         li
-            a(href="#") Prof-views
+            a(href="#")
+                i(class="bi bi-view-list")
+                span(class="d-none d-md-inline d-lg-inline mx-1") Views
         li
-            a(href="#") Settings
-                
-    div(class="container")
+            a(class="me-2" href="#")
+                i(class="bi bi-person-gear")
+                span(class="d-none d-md-inline d-lg-inline mx-1") Account
+    
+    
+    div(class="container_fluid udetail-prof p-2")
+        div(class="d-flex flex-row udetail-heading")
+            div(class="flex-fill p-0")
+                img(src=`data:image/${avatar.file.contentType};base64, ${avatar.file.data.toString('base64')}`)
+            div(class="d-flex flex-fill align-self-center p-0 udetail-stats")    
+                a(class="mx-2 ms-4 p-0" href="#")
+                    p(class="m-0 p-0 udetail-stats-num") 15 m
+                    p(class="m-0 p-0")
+                        small likes
+                a(class="mx-2 p-0" href="#")
+                    p(class="m-0 p-0 udetail-stats-num") 240 m
+                    p(class="m-0 p-0")
+                        small following
+                a(class="mx-2 p-0" href="#")
+                    p(class="m-0 p-0 udetail-stats-num") 24.8 k
+                    p(class="m-0 p-0")
+                        small followers
         div(class="row")
-            div(class="col-xs-3")
-                img(src=`data:image/${avatar.file.contentType};base64, ${avatar.file.data.toString('base64')}` width='150px' heigth='150px')
-            div(class="col-xs-9")
-        div(class="row")
-            h1= user.name
+            p(class="udetail-fullname") #{user.firstName}  #{user.lastName}
 
-        div(class="row")
-            div(class="col-xs-4")
-                a(href="#") Posts 
-            div(class="col-xs-4")
-                a(href="#") Blogs
-            div(class="col-xs-4")
-                a(href="#") Others
+
+    ul(class="nav nav-tabs" id="myTab" role="tablist")
+        li(class="nav-item" role="presentation")
+            button(class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true") Posts
+        li(class="nav-item" role="presentation")
+            button(button class="nav-link" id="article-tab" data-bs-toggle="tab" data-bs-target="#article" type="button" role="tab" aria-controls="article" aria-selected="false") Articles
+        li(class="nav-item" role="presentation")
+            button(button class="nav-link" id="blog-tab" data-bs-toggle="tab" data-bs-target="#blog" type="button" role="tab" aria-controls="blog" aria-selected="false") Blogs
+
+
+    div(class="tab-content")
+        div(class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab")
+            div(class="row")
+                //- each arrPostMedia in postMedia
+                    each post in arrPostMedia
+                        script.
+                            console.log(`!{post}`);
+
+                        if post[0] !== undefined
+                        else
+                            p= post.title
+                                
+
+
+                            a(class="col-4 col-sm-4 p-0 m-0 udetail-postlink" id="postlink" href=`/post/${post[0].url}`)
+                                //- img(class="img-responsive" src=`data:image/${post[0].file.contentType};base64, ${post[0].file.data.toString('base64')}`)
+
+        div(class="tab-pane" id="article" role="tabpanel" aria-labelledby="article-tab")
+        div(class="tab-pane" id="blog" role="tabpanel" aria-labelledby="blog-tab")
+    
+    
+    
+    script.
+        console.log("!{user.firstName}")
+
+
+    
+
+    hr
+
     h3 
         each val, index in userList
             a(href=val.url) #{val.name}
@@ -71,10 +106,9 @@ block content
             p #{index.kind} 
                 a(href=`${index.kind}.com`) #{index.uid}
 
-    each arrPostMedia in postMedia
+    //- each arrPostMedia in postMedia
         each post in arrPostMedia
             if post[0] === undefined
-                p= post.title
                 p= post.title 
                 p #[em #{post.description}]
                 p #{post.created_formatted}

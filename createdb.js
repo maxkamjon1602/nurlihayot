@@ -40,16 +40,16 @@ async function main() {
     console.log("Debug: About to connect");
     await mongoose.connect(mongoDB);
     console.log("Debug: Should be connected?");
-    await Promise.all([
-        await createUsers(),
-        await createCredentials(),
-        await createAuthentications(),
-    ]);
-    await createAddresses();
-    await createLists();
-    await createPosts();
+    // await Promise.all([
+    //     await createUsers(),
+    //     await createCredentials(),
+    //     await createAuthentications(),
+    // ]);
+    // await createAddresses();
+    // await createLists();
+    // await createPosts();
     await createMedias();
-    await createAvatars();
+    // await createAvatars();
     // await authenticateCredential();
     // await authenticateRememberMe();
     // await updateCredentialRole();
@@ -491,48 +491,96 @@ async function createLists() {
 
 async function createPosts() {
     console.log("Adding posts");
+    const lists = await User.findOne({ firstName: "Cid"}).exec();
     await Promise.all([
-        postCreate(0,
-            users[0],
-            "My favorite scenery",
-            "The photograph of this beautiful image deserves to be one of the best in the history",
-            "2018-01-04",
-            "",
-            [lists[0]]
-        ),
-        postCreate(1,
-            users[0],
-            "Gorgeous nature",
-            "This unknown flowers are very fabulous and their smell can be scent from screen. The second scene with mighty trees make the human feel insignificant.",
-            "2018-05-12",
-            "",
-            [lists[0]]
-        ),
-        postCreate(2,
-            users[4],
-            "My angel lady",
-            "This lady from Diablo IV is my favourite girl, and perfect match for my Shadow status.",
-            "2023-08-07",
-            "",
-            [lists[1]]
-        ),
-        postCreate(3,
-            users[3],
-            "Perfect for speeding",
-            "This straight line is so beautifully structured for my light speed run.",
-            "2017-07-22",
+        postCreate(4,
+            lists,
+            "Officia adipisicing dolor dolor velit aute occaecat duis commodo irure consequat non.",
+            "Id occaecat exercitation quis et exercitation consectetur et. Culpa veniam do adipisicing tempor elit velit excepteur velit sint sint aute quis labore. Anim fugiat Lorem id aute commodo laborum et laborum dolore laborum minim eu anim ipsum. Sunt eu dolore ut deserunt fugiat. Eiusmod in quis pariatur nostrud. Nostrud dolor sit adipisicing ea esse. Officia elit sit Lorem in sint dolor non commodo id.",
+            "2024-03-22",
             "",
             ""
         ),
+        postCreate(5,
+            lists,
+            "Laboris aliqua minim magna exercitation veniam consectetur dolore laboris proident duis enim magna.",
+            "Deserunt esse nisi enim commodo culpa duis qui exercitation irure commodo nostrud. Id dolore elit est nostrud consectetur sint ad enim ad elit ipsum. Duis laborum duis culpa occaecat ea. Commodo veniam in quis irure incididunt. Ullamco ex dolor deserunt velit qui.",
+            "2024-03-22",
+            "",
+            [lists[0]]
+        ),
+        postCreate(6,
+            lists,
+            "Elit culpa deserunt fugiat labore consectetur aute sit reprehenderit fugiat incididunt officia ut commodo cupidatat.",
+            "Consequat sint nostrud fugiat sint veniam enim amet officia adipisicing veniam ut.",
+            "2024-03-22",
+            "",
+            [lists[1]]
+        ),
+        postCreate(7,
+            lists,
+            "Deserunt fugiat adipisicing reprehenderit irure ut ipsum esse aute ad dolore Lorem.",
+            "Enim sit irure nisi dolor esse anim aute esse ut anim id.",
+            "2024-03-22",
+            "",
+            ""
+        ),
+        postCreate(8,
+            lists,
+            "Nostrud aliqua cillum quis excepteur est officia aute qui incididunt minim Lorem voluptate.",
+            "Ullamco Lorem proident commodo fugiat enim duis nisi id ea commodo et eiusmod commodo enim.",
+            "2024-03-22",
+            "",
+            ""
+        ),
+        
+
+
+
+        // postCreate(0,
+        //     users[0],
+        //     "My favorite scenery",
+        //     "The photograph of this beautiful image deserves to be one of the best in the history",
+        //     "2018-01-04",
+        //     "",
+        //     [lists[0]]
+        // ),
+        // postCreate(1,
+        //     users[0],
+        //     "Gorgeous nature",
+        //     "This unknown flowers are very fabulous and their smell can be scent from screen. The second scene with mighty trees make the human feel insignificant.",
+        //     "2018-05-12",
+        //     "",
+        //     [lists[0]]
+        // ),
+        // postCreate(2,
+        //     users[4],
+        //     "My angel lady",
+        //     "This lady from Diablo IV is my favourite girl, and perfect match for my Shadow status.",
+        //     "2023-08-07",
+        //     "",
+        //     [lists[1]]
+        // ),
+        // postCreate(3,
+        //     users[3],
+        //     "Perfect for speeding",
+        //     "This straight line is so beautifully structured for my light speed run.",
+        //     "2017-07-22",
+        //     "",
+        //     ""
+        // ),
     ]);
 }
 
 async function createMedias() {
     console.log("Adding media");
+    const posts = await Post.find().exec();
+
     await Promise.all([
-        mediaCreate(0,
-            posts[0],
-            "Iceberg",
+
+        mediaCreate(6,
+            posts[4],
+            "Picture name",
             "jpg",
             "./uploads-post/img-1.jpg",
             'image/png',
@@ -541,9 +589,9 @@ async function createMedias() {
             "2018-01-04",
             ""
         ),
-        mediaCreate(1,
-            posts[1],
-            "Violet-flowers",
+        mediaCreate(7,
+            posts[5],
+            "Picture name",
             "jpg",
             "./uploads-post/img-2.jpg",
             'image/png',
@@ -552,9 +600,9 @@ async function createMedias() {
             "2018-05-12",
             ""
         ),
-        mediaCreate(2,
-            posts[1],
-            "Mighty-trees",
+        mediaCreate(8,
+            posts[6],
+            "Picture name",
             "jpg",
             "./uploads-post/img-3.jpg",
             "image/png",
@@ -563,9 +611,9 @@ async function createMedias() {
             "2018-05-14",
             ""
         ),
-        mediaCreate(3,
-            posts[3],
-            "Dream-path",
+        mediaCreate(9,
+            posts[7],
+            "Picture name",
             "jpg",
             "./uploads-post/img-4.jpg", 
             "image/png",
@@ -574,9 +622,9 @@ async function createMedias() {
             "2017-07-22",
             ""
         ),
-        mediaCreate(4,
-            posts[2],
-            "Queen-Lilith",
+        mediaCreate(10,
+            posts[8],
+            "Picture name",
             "jpg",
             "./uploads-post/img-5.jpg", 
             "image/png",
@@ -585,9 +633,9 @@ async function createMedias() {
             "2017-07-22",
             ""
         ),
-        mediaCreate(5,
-            posts[1],
-            "Queen-Lilith",
+        mediaCreate(11,
+            posts[6],
+            "Picture name",
             "jpg",
             "./uploads-post/img-6.jpg", 
             "image/png",
@@ -596,6 +644,96 @@ async function createMedias() {
             "2017-07-22",
             ""
         ),
+        mediaCreate(12,
+            posts[8],
+            "Picture name",
+            "jpg",
+            "./uploads-post/img-11.jpg", 
+            "image/png",
+            247375,
+            "",
+            "2017-07-22",
+            ""
+        ),
+        mediaCreate(13,
+            posts[8],
+            "Picture name",
+            "jpg",
+            "./uploads-post/img-12.jpg", 
+            "image/png",
+            247375,
+            "",
+            "2017-07-22",
+            ""
+        ),
+
+
+        // mediaCreate(0,
+        //     posts[0],
+        //     "Iceberg",
+        //     "jpg",
+        //     "./uploads-post/img-1.jpg",
+        //     'image/png',
+        //     263172,
+        //     "",
+        //     "2018-01-04",
+        //     ""
+        // ),
+        // mediaCreate(1,
+        //     posts[1],
+        //     "Violet-flowers",
+        //     "jpg",
+        //     "./uploads-post/img-2.jpg",
+        //     'image/png',
+        //     357920,
+        //     "",
+        //     "2018-05-12",
+        //     ""
+        // ),
+        // mediaCreate(2,
+        //     posts[1],
+        //     "Mighty-trees",
+        //     "jpg",
+        //     "./uploads-post/img-3.jpg",
+        //     "image/png",
+        //     491193,
+        //     "",
+        //     "2018-05-14",
+        //     ""
+        // ),
+        // mediaCreate(3,
+        //     posts[3],
+        //     "Dream-path",
+        //     "jpg",
+        //     "./uploads-post/img-4.jpg", 
+        //     "image/png",
+        //     288478,
+        //     "",
+        //     "2017-07-22",
+        //     ""
+        // ),
+        // mediaCreate(4,
+        //     posts[2],
+        //     "Queen-Lilith",
+        //     "jpg",
+        //     "./uploads-post/img-5.jpg", 
+        //     "image/png",
+        //     365083,
+        //     "",
+        //     "2017-07-22",
+        //     ""
+        // ),
+        // mediaCreate(5,
+        //     posts[1],
+        //     "Queen-Lilith",
+        //     "jpg",
+        //     "./uploads-post/img-6.jpg", 
+        //     "image/png",
+        //     247375,
+        //     "",
+        //     "2017-07-22",
+        //     ""
+        // ),
     ]);
 }
 

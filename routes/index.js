@@ -62,10 +62,14 @@ router.get("/user/:id/settings/update", user_controller.user_update_get);
 // POST request to update user.
 router.post("/user/:id/settings/update", user_controller.user_update_post);
 
+// Get request to user settings.
 router.get("/user/:id/settings", user_controller.user_settings);
 
 // GET request for one user.
 router.get("/user/:id", user_controller.user_detail);
+
+// Post request for one user.
+router.post("/user/:id", user_controller.user_detail_post);
 
 // GET request for list of all users.
 router.get("/users", user_controller.user_list);
